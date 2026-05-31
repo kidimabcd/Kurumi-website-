@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentang Violet Evgarden</title>
+    <style>
+        /* === GAYA DASAR HALAMAN === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* === TOMBOL TITIK TIGA (PERMANEN KANAN ATAS) === */
+        .menu-dots {
+            position: fixed;
+            top: 20px;
+            right: 25px;
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(187, 134, 252, 0.3);
+            color: #bb86fc;
+            font-size: 1.8rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1100;
+            transition: 0.3s;
+            padding: 0;
+            line-height: 1;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .menu-dots.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .menu-dots:hover {
+            color: #03dac5;
+            border-color: #03dac5;
+        }
+
+        /* === PANEL SAMPING (SIDE MENU) === */
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 75%;
+            max-width: 320px;
+            height: 100vh;
+            background: rgba(26, 26, 46, 0.96);
+            backdrop-filter: blur(30px);
+            border-left: 1px solid rgba(187, 134, 252, 0.25);
+            z-index: 1200;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            color: #e0e0e0;
+        }
+
+        .side-panel.show {
+            transform: translateX(0);
+        }
+
+        .side-panel .close-panel {
+            align-self: flex-end;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.8rem;
+            cursor: pointer;
+            margin-bottom: 30px;
+            transition: 0.3s;
+        }
+
+        .side-panel .close-panel:hover {
+            color: #bb86fc;
+            transform: rotate(90deg);
+        }
+
+        .side-panel a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 10px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #ccc;
+            font-weight: 500;
+            transition: 0.2s;
+            margin-bottom: 5px;
+        }
+
+        .side-panel a:hover {
+            background: rgba(187, 134, 252, 0.15);
+            color: #bb86fc;
+        }
+
+        .side-panel .menu-icon {
+            font-size: 1.3rem;
+        }
+
+        /* === OVERLAY BACKGROUND (saat panel terbuka) === */
+        .side-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1199;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .side-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* === AUDIO PLAYER (POJOK KIRI BAWAH) === */
+        .audio-player {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 40px;
+            padding: 8px 18px 8px 12px;
+            border: 1px solid rgba(187, 134, 252, 0.3);
+            color: #e0e0e0;
+            font-size: 0.9rem;
+        }
+
+        .audio-btn {
+            background: #bb86fc;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            color: #1a1a2e;
+            font-size: 1rem;
+        }
+
+        .audio-btn:hover {
+            background: #03dac5;
+        }
+
+        .audio-label {
+            color: #aaa;
+            font-weight: 500;
+        }
+
+        /* === KONTEN UTAMA (ABOUT) === */
+        .container {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 30px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            text-align: center;
+            color: #e0e0e0;
+        }
+
+        .container img {
+            width: 100%;
+            max-width: 280px;
+            border-radius: 20px;
+            border: 3px solid #bb86fc;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(187, 134, 252, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin: 0 0 5px 0;
+            background: linear-gradient(to right, #bb86fc, #03dac5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            font-style: italic;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+
+        .desc {
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #ccc;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #bb86fc;
+            color: #1a1a2e;
+            padding: 14px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn:hover {
+            background: #03dac5;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(3, 218, 197, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #bb86fc;
+            color: #bb86fc;
+        }
+
+        .btn-outline:hover {
+            background: #bb86fc;
+            color: #1a1a2e;
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .footer a {
+            color: #bb86fc;
+            text-decoration: none;
+        }
+
+        /* === OVERLAY VERIFIKASI (SLIDE UP) === */
+        .verify-overlay {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            background: rgba(26, 26, 46, 0.96);
+            backdrop-filter: blur(25px);
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .verify-overlay.show {
+            transform: translateY(0);
+        }
+
+        .verify-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(187, 134, 252, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            max-width: 350px;
+            width: 100%;
+            color: #e0e0e0;
+        }
+
+        .verify-box h3 {
+            margin-bottom: 20px;
+            color: #bb86fc;
+        }
+
+        .captcha-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            cursor: pointer;
+            border: 1px solid rgba(187, 134, 252, 0.2);
+            transition: 0.3s;
+            user-select: none;
+        }
+
+        .captcha-container:hover {
+            background: rgba(187, 134, 252, 0.1);
+        }
+
+        .captcha-checkbox {
+            width: 28px;
+            height: 28px;
+            border: 2px solid #bb86fc;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            flex-shrink: 0;
+        }
+
+        .captcha-checkbox.checked {
+            background: #bb86fc;
+        }
+
+        .captcha-checkbox.checked::after {
+            content: "✓";
+            color: #1a1a2e;
+            font-weight: bold;
+        }
+
+        .captcha-text {
+            color: #ccc;
+        }
+
+        .btn-verify {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 30px;
+            background: #bb86fc;
+            color: #1a1a2e;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .btn-verify.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .btn-verify.active:hover {
+            background: #03dac5;
+        }
+
+        /* === OVERLAY FITUR (SLIDE UP) === */
+        .features-overlay {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            background: rgba(26, 26, 46, 0.96);
+            backdrop-filter: blur(25px);
+            transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 30px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            color: #e0e0e0;
+        }
+
+        .features-overlay.show {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 10;
+        }
+
+        .close-btn:hover {
+            color: #bb86fc;
+            transform: rotate(90deg);
+        }
+
+        .features-title {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #bb86fc, #03dac5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        /* === KARTU FITUR (ACCORDION) === */
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(187, 134, 252, 0.25);
+            transition: 0.3s;
+            opacity: 0;
+            transform: translateY(60px);
+            cursor: pointer;
+        }
+
+        .feature-card.show {
+            animation: slideUp 0.6s ease forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feature-card:hover {
+            background: rgba(187, 134, 252, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.3);
+        }
+
+        .feature-header {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .feature-header .icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .feature-header h3 {
+            color: #bb86fc;
+            margin-bottom: 8px;
+        }
+
+        .feature-header p {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Panel detail */
+        .feature-detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), padding 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+            background: rgba(187, 134, 252, 0.1);
+            border-radius: 0 0 16px 16px;
+            padding: 0 20px;
+            color: #ccc;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            opacity: 0;
+        }
+
+        .feature-card.active .feature-detail {
+            max-height: 500px;
+            padding: 15px 20px;
+            opacity: 1;
+        }
+
+        .feature-detail ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .feature-detail li {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .feature-detail li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- ====== TOMBOL TITIK TIGA (PERMANEN) ====== -->
+    <div class="menu-dots" id="menuDots">⋮</div>
+
+    <!-- ====== OVERLAY BACKGROUND SIDE PANEL ====== -->
+    <div class="side-overlay" id="sideOverlay"></div>
+
+    <!-- ====== PANEL SAMPING (SLIDE FROM RIGHT) ====== -->
+    <div class="side-panel" id="sidePanel">
+        <button class="close-panel" id="closePanel">&times;</button>
+        <a href="mailto:kairoofficialvio@gmail.com" target="_blank">
+            <span class="menu-icon">📧</span> Email Developer
+        </a>
+        <a href="https://wa.me/13679879627?text=Halo%20Dev%20Violet%2C%20saya%20mau%20saran%20fitur%20baru%3A%20" target="_blank">
+            <span class="menu-icon">💡</span> Saran Fitur
+        </a>
+        <a href="https://wa.me/13679879627?text=Halo%20Dev%20Violet%2C%20saya%20mau%20kasih%20feedback%20tentang%20bot%3A%20" target="_blank">
+            <span class="menu-icon">📋</span> Feedback
+        </a>
+    </div>
+
+    <!-- ====== AUDIO PLAYER ====== -->
+    <audio id="bgMusic" loop>
+        <source src="https://files.catbox.moe/12jnvg.mp3" type="audio/mpeg">
+        Browser kamu tidak mendukung pemutaran audio.
+    </audio>
+    <div class="audio-player">
+        <button class="audio-btn" id="audioToggle" title="Putar/Stop">▶</button>
+        <span class="audio-label">Play song</span>
+    </div>
+
+    <!-- ====== HALAMAN UTAMA (ABOUT) ====== -->
+    <div class="container">
+        <img src="https://c.termai.cc/i150/8ArQWMN.jpg" alt="kurumi tokisaki">
+
+        <h1>kurumi tokisaki</h1>
+        <p class="tagline">WhatsApp Multi-Device Bot</p>
+
+        <p class="desc">
+            Bot WhatsApp serbaguna dengan berbagai fitur menarik.
+            Dibangun dengan Node.js dan library Baileys,
+            siap menemani aktivitas chat Anda.
+        </p>
+
+        <a href="https://wa.me/13679879627?text=Halo%20Dev%20Violet.%20Boleh%20kenalan%3F" class="btn" target="_blank">
+            💬 Chat Developer
+        </a>
+
+        <button id="btnGetScript" class="btn btn-outline" style="display:block; width:100%; max-width:280px; margin:15px auto 0;">
+            📂 Ambil Script Secara Gratis
+        </button>
+
+        <button id="showFeaturesBtn" class="btn btn-outline" style="display:block; width:100%; max-width:280px; margin:15px auto 0;">
+            ✨ Lihat Fitur Bot
+        </button>
+
+        <div class="footer">
+            <p>© 2025 kurumi tokisaki . di buat  oleh <a href="#">developer yuu</a></p>
+        </div>
+    </div>
+
+    <!-- ====== OVERLAY VERIFIKASI ====== -->
+    <div id="verifyOverlay" class="verify-overlay">
+        <div class="verify-box">
+            <h3>🔐 Verifikasi Keamanan</h3>
+            <p style="color:#aaa; margin-bottom:15px;">Centang kotak di bawah untuk melanjutkan.</p>
+
+            <div class="captcha-container" id="captchaBox">
+                <div class="captcha-checkbox" id="captchaCheck"></div>
+                <span class="captcha-text">Saya bukan robot</span>
+            </div>
+
+            <button id="btnVerifyGo" class="btn-verify">Lanjutkan ke GitHub</button>
+        </div>
+    </div>
+
+    <!-- ====== OVERLAY FITUR (ACCORDION) ====== -->
+    <div id="featuresOverlay" class="features-overlay">
+        <button id="closeFeaturesBtn" class="close-btn" title="Tutup">&times;</button>
+
+        <h2 class="features-title">Fitur Unggulan</h2>
+        <p style="color: #999; margin-bottom: 30px; font-size: 0.9rem; text-align: center; width: 100%;">✨ Klik fitur untuk melihat fungsi fitur secara detail ✨</p>
+
+        <div class="features-grid" id="featuresGrid">
+            <!-- Kartu Fitur: Stiker & Gambar -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">🌸</div>
+                    <h3>Stiker & Gambar</h3>
+                    <p>Ubah gambar jadi stiker, efek Brat, smeme, dan lainnya.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Stiker gambar statis (WebP)</li>
+                        <li>Stiker video animasi</li>
+                        <li>Efek Brat, smeme, quote</li>
+                        <li>Konversi stiker ke gambar</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Downloader -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">🔊</div>
+                    <h3>Downloader</h3>
+                    <p>Unduh video dari YouTube, TikTok, Instagram, Spotify.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>YouTube (video & audio)</li>
+                        <li>TikTok tanpa watermark</li>
+                        <li>Instagram Reels & IGTV</li>
+                        <li>Spotify music downloader</li>
+                        <li>Twitter/X video downloader</li>
+                        <li>CapCut, MediaFire, dll.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Owner Khusus -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">👑</div>
+                    <h3>Owner Khusus</h3>
+                    <p>Kendali penuh hanya untuk pemilik bot.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Hanya owner bisa akses eval, exec, restart</li>
+                        <li>Pengaturan mode public/self</li>
+                        <li>Add/remove owner tambahan</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Auto Welcome/Goodbye -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">💬</div>
+                    <h3>Auto Welcome/Goodbye</h3>
+                    <p>Sambut member baru & ucapkan perpisahan di grup.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Pesan welcome kustom dengan foto profil</li>
+                        <li>Ucapan selamat tinggal saat member keluar</li>
+                        <li>Promote/demote notifikasi</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- AI & Translate -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">🧠</div>
+                    <h3>AI & Translate</h3>
+                    <p>Terjemahan otomatis dan fitur berbasis AI.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Google Translate & Bing</li>
+                        <li>ChatGPT / Gemini integration (opsional)</li>
+                        <li>Auto-detect bahasa</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Response Cepat -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">⚡</div>
+                    <h3>Response Cepat</h3>
+                    <p>Bot ringan dan responsif berkat Node.js.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Latency < 1000ms</li>
+                        <li>Proses ringan, hemat RAM</li>
+                        <li>Multi-thread support</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Anti-Maling -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">🔒</div>
+                    <h3>Anti-Maling</h3>
+                    <p>Perlindungan dari penculikan bot di grup.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Deteksi penambahan ilegal oleh non-owner</li>
+                        <li>Auto-leave jika bukan owner yang menambahkan</li>
+                        <li>Notifikasi ke owner saat percobaan penculikan</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Info Sistem -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">📊</div>
+                    <h3>Info Sistem</h3>
+                    <p>Cek RAM, CPU, dan uptime langsung dari chat.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>CPU model & usage</li>
+                        <li>RAM total & terpakai</li>
+                        <li>Uptime bot & server</li>
+                        <li>Kecepatan respon</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Status Hijau Grup (SWGC) -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">🟢</div>
+                    <h3>Status Hijau Grup (SWGC)</h3>
+                    <p>Buat status vidio di dalam grup.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>mengupload statu vidio/foto di dalam group</li>
+                        <li>bebas foto atau vidio</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Manajemen Grup -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">⚙️</div>
+                    <h3>Manajemen Grup</h3>
+                    <p>Kick, ban, jadikan admin, atau turunkan admin.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Kick member dari grup</li>
+                        <li>Ban sementara/permanen</li>
+                        <li>Promote/demote admin</li>
+                        <li>Setujui/tolak permintaan gabung</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Fitur Fun -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">🎉</div>
+                    <h3>Fitur Fun</h3>
+                    <p>Kumpulan perintah seru dan hiburan ringan.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Cek khodam, cek jodoh, cek sifat</li>
+                        <li>Simulate slot, dadu, tebak gambar</li>
+                        <li>Random quotes, pantun, meme</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Fitur Game -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">🎮</div>
+                    <h3>Fitur Game</h3>
+                    <p>Game interaktif seperti tebak-tebakan, slot, dll.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Tebak gambar, tebak lagu</li>
+                        <li>Slot machine, blackjack</li>
+                        <li>Game RPG mini</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Fitur RPG -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">⚔️</div>
+                    <h3>Fitur RPG</h3>
+                    <p>Petualangan RPG dengan level, inventory, dan misi.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Leveling & experience</li>
+                        <li>Inventory & equipment</li>
+                        <li>Dungeon & monster</li>
+                        <li>Economy (gold, shop)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Kalkulator -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">🔢</div>
+                    <h3>Kalkulator</h3>
+                    <p>Hitung ekspresi matematika langsung di chat.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Operasi dasar (+, -, *, /)</li>
+                        <li>Pangkat, akar, trigonometri</li>
+                        <li>Konversi satuan</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Stopwatch -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">⏱️</div>
+                    <h3>Stopwatch</h3>
+                    <p>Mulai, jeda, dan catat waktu langsung di bot.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Start/pause/reset</li>
+                        <li>Lap time</li>
+                        <li>Timer countdown</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Rating Bot -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">⭐</div>
+                    <h3>Rating Bot</h3>
+                    <p>Beri rating dan lihat penilaian dari pengguna lain.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Rate 1-5 bintang</li>
+                        <li>Lihat rata-rata rating</li>
+                        <li>Feedback pengguna</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Fitur Store -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">🛒</div>
+                    <h3>Fitur Store</h3>
+                    <p>Toko dalam bot untuk membeli item digital.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Top up saldo</li>
+                        <li>Beli item RPG</li>
+                        <li>Voucher & paket premium</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Beli Kuota Internet -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">📶</div>
+                    <h3>Beli Kuota Internet</h3>
+                    <p>Isi ulang kuota internet langsung dari chat.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Semua operator (Telkomsel, XL, dll.)</li>
+                        <li>Kuota reguler & unlimited</li>
+                        <li>Pembayaran via Dana, Ovo, Gopay</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Buy Nokos -->
+            <div class="feature-card">
+                <div class="feature-header">
+                    <div class="icon">📱</div>
+                    <h3>Buy Nokos</h3>
+                    <p>Beli nomor kosong untuk verifikasi akun.</p>
+                </div>
+                <div class="feature-detail">
+                    <ul>
+                        <li>Nomor Indonesia & luar negeri</li>
+                        <li>Sekali pakai</li>
+                        <li>Auto-read OTP (opsional)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === SIDE PANEL (TITIK TIGA) ===
+        const menuDots = document.getElementById('menuDots');
+        const sidePanel = document.getElementById('sidePanel');
+        const sideOverlay = document.getElementById('sideOverlay');
+        const closePanel = document.getElementById('closePanel');
+
+        function openSidePanel() {
+            sidePanel.classList.add('show');
+            sideOverlay.classList.add('show');
+            menuDots.classList.add('hidden');
+        }
+
+        function closeSidePanel() {
+            sidePanel.classList.remove('show');
+            sideOverlay.classList.remove('show');
+            menuDots.classList.remove('hidden');
+        }
+
+        menuDots.addEventListener('click', openSidePanel);
+        closePanel.addEventListener('click', closeSidePanel);
+        sideOverlay.addEventListener('click', closeSidePanel);
+
+        // === AUDIO PLAYER (PLAY DONG) ===
+        const bgMusic = document.getElementById('bgMusic');
+        const audioToggle = document.getElementById('audioToggle');
+        let isPlaying = false;
+
+        audioToggle.addEventListener('click', () => {
+            if (isPlaying) {
+                bgMusic.pause();
+                audioToggle.textContent = '▶';
+            } else {
+                bgMusic.play().catch(err => {
+                    console.log('Autoplay diblokir, klik tombol untuk memulai.');
+                });
+                audioToggle.textContent = '⏸';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // === VERIFIKASI ROBOT ===
+        const btnGetScript = document.getElementById('btnGetScript');
+        const verifyOverlay = document.getElementById('verifyOverlay');
+        const captchaBox = document.getElementById('captchaBox');
+        const captchaCheck = document.getElementById('captchaCheck');
+        const btnVerifyGo = document.getElementById('btnVerifyGo');
+
+        let isVerified = false;
+
+        function openVerify() {
+            verifyOverlay.classList.add('show');
+            menuDots.classList.add('hidden');
+        }
+
+        function closeVerify() {
+            verifyOverlay.classList.remove('show');
+            menuDots.classList.remove('hidden');
+        }
+
+        btnGetScript.addEventListener('click', () => {
+            openVerify();
+            isVerified = false;
+            captchaCheck.classList.remove('checked');
+            btnVerifyGo.classList.remove('active');
+        });
+
+        captchaBox.addEventListener('click', () => {
+            if (isVerified) {
+                isVerified = false;
+                captchaCheck.classList.remove('checked');
+                btnVerifyGo.classList.remove('active');
+            } else {
+                isVerified = true;
+                captchaCheck.classList.add('checked');
+                btnVerifyGo.classList.add('active');
+            }
+        });
+
+        btnVerifyGo.addEventListener('click', () => {
+            if (isVerified) {
+                window.open('https://github.com/kidimabcd', '_blank');
+                closeVerify();
+                isVerified = false;
+                captchaCheck.classList.remove('checked');
+                btnVerifyGo.classList.remove('active');
+            }
+        });
+
+        // === OVERLAY FITUR & ACCORDION ===
+        const showBtn = document.getElementById('showFeaturesBtn');
+        const closeBtn = document.getElementById('closeFeaturesBtn');
+        const featuresOverlay = document.getElementById('featuresOverlay');
+        const featureCards = document.querySelectorAll('.feature-card');
+
+        function openFeatures() {
+            featuresOverlay.classList.add('show');
+            menuDots.classList.add('hidden');
+            setTimeout(showCardsSequentially, 600);
+        }
+
+        function closeFeatures() {
+            featuresOverlay.classList.remove('show');
+            menuDots.classList.remove('hidden');
+        }
+
+        function showCardsSequentially() {
+            featureCards.forEach((card, index) => {
+                card.classList.remove('show');
+                setTimeout(() => {
+                    card.classList.add('show');
+                }, index * 100);
+            });
+        }
+
+        showBtn.addEventListener('click', openFeatures);
+
+        closeBtn.addEventListener('click', closeFeatures);
+
+        featuresOverlay.addEventListener('click', (e) => {
+            if (e.target === featuresOverlay) {
+                closeFeatures();
+            }
+        });
+
+        // ===== ACCORDION LOGIC =====
+        featureCards.forEach(card => {
+            const header = card.querySelector('.feature-header');
+            header.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (card.classList.contains('active')) {
+                    card.classList.remove('active');
+                } else {
+                    featureCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
